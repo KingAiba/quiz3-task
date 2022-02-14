@@ -46,7 +46,7 @@ public class PlayerScript : MonoBehaviour
     private void FixedUpdate()
     {
         TryJump();
-        //TrySlam();
+        TrySlam();
     }
 
     public void MountingProcedure(MountMovement mount)
@@ -100,7 +100,7 @@ public class PlayerScript : MonoBehaviour
 
     public void TryJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping && isMounted && !isDead)
+        if (Input.GetKeyDown(KeyCode.Space) && !isJumping && !isDead)
         {
 
             UnMountingProcedure();
