@@ -46,7 +46,7 @@ public class PlayerScript : MonoBehaviour
     private void FixedUpdate()
     {
         TryJump();
-        TrySlam();
+        //TrySlam();
     }
 
     public void MountingProcedure(MountMovement mount)
@@ -92,7 +92,7 @@ public class PlayerScript : MonoBehaviour
     {
         if(Input.GetKeyUp(KeyCode.Space) && isJumping && !isMounted && !isDead)
         {
-            Debug.Log("HERE");
+            
             playerRB.velocity = Vector3.zero;
             playerRB.AddForce(-transform.up * slamForce, ForceMode.Impulse);
         }
@@ -119,11 +119,15 @@ public class PlayerScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Mount") && !isMounted && collision.gameObject != currMount)
+        if (collision.gameObject.CompareTag("Mount") && !isMounted && collision.gameObject != currMount && !isDead)
         {
             //Debug.Log(collision.gameObject != currMount);
             isJumping = false;
             collision.gameObject.GetComponent<MountMovement>().Mount(gameObject);
+        }
+        else if(collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle"))
+        {
+            isDead = true;
         }
     }
 
