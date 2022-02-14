@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
     public float jumpForce = 10f;
     public bool isJumping = false;
     //public bool isGrounded = true;
+
+    public float slamForce = 25f;
 
     public bool isMounted = false;
 
@@ -24,6 +27,8 @@ public class PlayerScript : MonoBehaviour
     public bool isDead = false;
     public int score = 0;
 
+    public TextMeshProUGUI scoreText;
+
     void Start()
     {
         playerRB = GetComponent<Rigidbody>();
@@ -34,12 +39,14 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
+        UpdateScore();
         input = inputScript.GetInputVector();
     }
 
     private void FixedUpdate()
     {
         TryJump();
+        TrySlam();
     }
 
     public void MountingProcedure(MountMovement mount)
@@ -71,6 +78,7 @@ public class PlayerScript : MonoBehaviour
 
     public void JumpedProcedure()
     {
+        isJumping = true;
         isMounted = false;
         currMount = null;
     }
@@ -80,6 +88,16 @@ public class PlayerScript : MonoBehaviour
         return input;
     }
 
+    public void TrySlam()
+    {
+        if(Input.GetKeyUp(KeyCode.Space) && isJumping && !isMounted && !isDead)
+        {
+            Debug.Log("HERE");
+            playerRB.velocity = Vector3.zero;
+            playerRB.AddForce(-transform.up * slamForce, ForceMode.Impulse);
+        }
+    }
+
     public void TryJump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && !isJumping && isMounted && !isDead)
@@ -87,7 +105,8 @@ public class PlayerScript : MonoBehaviour
 
             UnMountingProcedure();
             playerRB.AddForce((jumpTarget.transform.position - transform.position).normalized * jumpForce, ForceMode.Impulse);
-            isJumping = true;
+            JumpedProcedure();
+            
         }
     }
 
@@ -102,9 +121,14 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Mount") && !isMounted && collision.gameObject != currMount)
         {
-            Debug.Log(collision.gameObject != currMount);
+            //Debug.Log(collision.gameObject != currMount);
             isJumping = false;
             collision.gameObject.GetComponent<MountMovement>().Mount(gameObject);
         }
+    }
+
+    public void UpdateScore()
+    {
+        scoreText.SetText("Score : " + score);
     }
 }
