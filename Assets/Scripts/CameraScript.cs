@@ -7,14 +7,14 @@ public class CameraScript : MonoBehaviour
     public GameObject target;
     public Vector3 offset;
 
-    // Start is called before the first frame update
+    
     void Start()
     {
         target = GameObject.Find("Player");
         offset = transform.position;
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
 
@@ -24,7 +24,7 @@ public class CameraScript : MonoBehaviour
     {
         FollowTarget();
     }
-
+    // follow given target
     public void FollowTarget()
     {
         if (target != null)

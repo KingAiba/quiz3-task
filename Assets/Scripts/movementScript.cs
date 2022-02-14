@@ -7,57 +7,60 @@ public class movementScript : MonoBehaviour
     public float moveSpeed = 10f;
     public float rotationSpeed = 10f;
 
-    public float jumpForce = 10f;
-    public bool isJumping = false;
-    public bool isGrounded = true;
 
-    public Transform jumpTarget;
 
-    private Vector3 input;
+
+    //private Vector3 input;
     private Rigidbody objectRB;
-    private PlayerInputScript inputScript;
+
     void Start()
     {
         objectRB = GetComponent<Rigidbody>();
-        inputScript = GetComponent<PlayerInputScript>();
+        //inputScript = GetComponent<PlayerInputScript>();
     }
 
     
     void Update()
     {
-        input = inputScript.GetInputVector();       
+        //input = inputScript.GetInputVector();       
     }
 
     private void FixedUpdate()
     {
-        rotateObject();
-        moveObject();
-        Jump();
+        //rotateObject();
+        //moveObject();
+        //Jump();
     }
+
     // moveobject by applying constant velocity forward
-    public void moveObject()
+    public void moveObject(Transform directionTransform)
     {
-        objectRB.velocity = new Vector3(transform.forward.x*moveSpeed, objectRB.velocity.y, transform.forward.z*moveSpeed);
+        objectRB.velocity = new Vector3(directionTransform.forward.x*moveSpeed, objectRB.velocity.y, directionTransform.forward.z*moveSpeed);
+
     }
     // rotate b/w -40 and 40 depending on input
-    public void rotateObject()
+    public void rotateObject(Vector3 input)
     {
         if(input.magnitude != 0)
         {
             float horizontal = input.x * 40;
 
             Quaternion rotation = Quaternion.Slerp(new Quaternion(0, 0, 0, 0), Quaternion.Euler(0, horizontal, 0), Time.deltaTime * rotationSpeed);
-            Debug.Log(rotation);
+            //Debug.Log(rotation);
             transform.rotation = rotation;
         }
         
     }
 
-    public void Jump()
+    public Rigidbody GetRigidbody()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            objectRB.AddForce((jumpTarget.transform.position - transform.position).normalized * jumpForce, ForceMode.Impulse);
-        }
+        return objectRB;
     }
+
+    public void SetSpeed(float newSpeed)
+    {
+        moveSpeed = newSpeed;
+    }
+
+
 }
